@@ -15,11 +15,7 @@ const Home = () => {
   const search = (event) => {
     setSearchVenue(event.target.value);
   };
-  const filteredVenues = Array.isArray(venues) ? venues.filter(
-    (venue) =>
-      venue.name.toLowerCase().includes(searchVenue.toLowerCase()) ||
-      venue.address.toLowerCase().includes(searchVenue.toLowerCase())
-  ) : [];
+
   React.useEffect(() => {
     dispatch({ type: "FETCH_INIT" });
     VenueDataService.nearbyVenues(coordinate.lat,coordinate.long)
@@ -39,6 +35,9 @@ const Home = () => {
       });
     }
   }, []);
+  const filteredVenues=venues.filter((venue) => { 
+    return venue.name.toLowerCase().includes(searchVenue.toLowerCase());
+  });
   return (
     <div>
       <Header

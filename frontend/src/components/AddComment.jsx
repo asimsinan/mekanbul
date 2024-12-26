@@ -3,8 +3,10 @@ import React from "react";
 import { useParams,useLocation,useNavigate} from "react-router-dom";
 import VenueDataService from "../services/VenueDataService";
 import { useDispatch } from "react-redux"
+import Modal from "../components/Modal";
 function AddComment() {
   const { id } = useParams();
+  const [showModal, setShowModal] = React.useState(false);
   //Bir önceki sayfadan gelen bilgisi almak için kullanılır.
   const location = useLocation();
   //Redux kullanımı
@@ -23,12 +25,16 @@ function AddComment() {
         }       
         VenueDataService.addComment(id, newComment).then(() => {
           dispatch({ type: "ADD_COMMENT_SUCCESS" });
-          navigate(`/venue/${id}`);
+         setShowModal(true);
         }).catch(() => {
           dispatch({ type: "ADD_COMMENT_FAILURE" });
         });
       }
   };
+  const handleModalClose = () => {  
+    setShowModal(false);
+    navigate(`/venue/${id}`);
+  }
     return (
       <>
         <Header headerText={location.state.name} motto=" mekanına yorum yap" />
@@ -80,6 +86,7 @@ function AddComment() {
               <button className="btn btn-default pull-right">Yorum Ekle</button>
             </form>
           </div>
+          <Modal show={showModal} onClose={() => handleModalClose()} title={"Tebrikler"} message={"Yorumunuz Yayınlandı!"}/>
         </div>
       </>
     );
