@@ -35,9 +35,9 @@ const Home = () => {
       });
     }
   }, []);
-  const filteredVenues=venues.filter((venue) => { 
+  const filteredVenues=Array.isArray(venues)?venues.filter((venue) => { 
     return venue.name.toLowerCase().includes(searchVenue.toLowerCase());
-  });
+  }):[];
   return (
     <div>
       <Header
