@@ -88,7 +88,7 @@ const venueReducer = (state=initialState, action) => {
           isDeleted:false
         };
     default:
-      return state;
+      return initialState;
   }
 };
 export default venueReducer;

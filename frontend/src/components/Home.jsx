@@ -15,15 +15,17 @@ const Home = () => {
   const search = (event) => {
     setSearchVenue(event.target.value);
   };
-
   React.useEffect(() => {
-    dispatch({ type: "FETCH_INIT" });
-    VenueDataService.nearbyVenues(coordinate.lat,coordinate.long)
-    .then((response) => {
-      dispatch({ type: "FETCH_SUCCESS", payload: response.data });
-    }).catch(() => {
-      dispatch({ type: "FETCH_FAILURE" });
-    });
+    const fetchNearbyVenues = async () => {
+      dispatch({ type: "FETCH_INIT" });
+      try {
+        const response = await VenueDataService.nearbyVenues(coordinate.lat, coordinate.long);
+        dispatch({ type: "FETCH_SUCCESS", payload: response.data });
+      } catch (error) {
+        dispatch({ type: "FETCH_FAILURE" });
+      }
+    };
+    fetchNearbyVenues();
   }, [coordinate.lat, coordinate.long]);
   React.useEffect(() => {
     if ("geolocation" in navigator) {
@@ -35,9 +37,9 @@ const Home = () => {
       });
     }
   }, []);
-  const filteredVenues=Array.isArray(venues)?venues.filter((venue) => { 
+  const filteredVenues = Array.isArray(venues) ? venues.filter((venue) => { 
     return venue.name.toLowerCase().includes(searchVenue.toLowerCase());
-  }):[];
+  }) : [];
   return (
     <div>
       <Header
