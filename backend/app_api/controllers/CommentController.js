@@ -1,5 +1,6 @@
 var mongoose = require("mongoose");
 var Venue = mongoose.model("venue");
+var User = mongoose.model("user");
 var calculateLastRating = function (incomingVenue, isDeleted) {
   var i,
     numComments,
@@ -28,9 +29,13 @@ var updateRating = function (venueid, isDeleted) {
       calculateLastRating(venue, isDeleted);
     });
 };
-var createComment = function (req, res, incomingVenue) {
+const createComment = function (req, res, incomingVenue, author) {
   try {
-    incomingVenue.comments.push(req.body);
+    incomingVenue.comments.push({
+      author: author,
+      rating: req.body.rating,
+      text: req.body.text,
+    });
     incomingVenue.save().then(function (venue) {
       var comment;
       updateRating(venue._id);
@@ -38,7 +43,7 @@ var createComment = function (req, res, incomingVenue) {
       createResponse(res, 201, comment);
     });
   } catch (error) {
-    createResponse(res, 400, { status: error });
+    createResponse(res, 400, { status: "Comment couldnt be published!" });
   }
 };
 const createResponse = function (res, status, content) {
@@ -47,14 +52,17 @@ const createResponse = function (res, status, content) {
 
 const addComment = async function (req, res) {
   try {
-    await Venue.findById(req.params.venueid)
+    await
+    getUser(req,res,(req,res,userName)=>{
+     Venue.findById(req.params.venueid)
       .select("comments")
       .exec()
-      .then(function (venue) { 
-        createComment(req, res, venue);
+      .then((incomingVenue) => {
+        createComment(req, res, incomingVenue,userName);
       });
+    });
   } catch (error) {
-    createResponse(res, "400", error);
+    createResponse(res, 400, { status: "Comment couldnt be published!" });
   }
 };
 
@@ -102,7 +110,21 @@ const updateComment = async function (req, res) {
     createResponse(res, "400", error);
   }
 };
-
+const getUser = async (req, res, callback) => {
+  if (req.auth && req.auth.email) {
+    try{
+      await User.findOne({ email: req.auth.email }).then(function(user) {
+  
+        callback(req, res, user.name);
+      });
+    }catch(error){
+      createResponse(res, 400, { status: "Comment couldnt be added!" });
+    }
+   
+  } else {
+    createResponse(res, 400, { status: "Authentication error" });
+  }
+};
 const getComment = async function (req, res) {
   try {
     await Venue.findById(req.params.venueid)
