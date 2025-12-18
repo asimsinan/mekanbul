@@ -35,4 +35,15 @@ app.use((err, req, res, next) => {
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 
+// Handle 404 for routes not found
+app.use((req, res) => {
+  res.status(404).json({ message: "Route not found" });
+});
+
+// Start server on Vercel
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
 module.exports = app;
