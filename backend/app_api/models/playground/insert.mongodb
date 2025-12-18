@@ -1,0 +1,3 @@
+const database = 'mekanbul';
+use(database);
+db.venues.dropIndex("coordinates_2dsphere")
