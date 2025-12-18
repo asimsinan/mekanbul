@@ -55,7 +55,7 @@ function Signup() {
                 <input
                   className="form-control"
                   name="username"
-                  defaultValue="asy"
+                  defaultValue=""
                 />
               </div>
             </div>
@@ -67,7 +67,7 @@ function Signup() {
                 <input
                   className="form-control"
                   name="email"
-                  defaultValue="asy"
+                  defaultValue=""
                 />
               </div>
             </div>
@@ -77,7 +77,7 @@ function Signup() {
                 <input
                   className="form-control"
                   name="password"
-                  defaultValue="asy"
+                  defaultValue=""
                 />
               </div>
             </div>
