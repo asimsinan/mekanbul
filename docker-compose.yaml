@@ -1,0 +1,47 @@
+services:
+  mekanbul_frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: mekanbul_frontend
+    environment:
+      - VITE_API_URL=http://localhost:3000/api/
+    ports:
+      - 5173:5173
+    networks:
+      - benimagim
+    restart: always
+    depends_on:
+      - mekanbul_backend
+  mekanbul_backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: mekanbul_backend
+    environment:
+      - PORT=3000
+      - MONGODB_URI=mongodb://mongo:27017/mekanbul
+    ports:
+      - 3000:3000
+    networks:
+      - benimagim
+    restart: always
+    depends_on:
+      - mongo
+  mongo:
+    image: mongo:latest
+    container_name: mongodb_kapsayici
+    networks:
+      - benimagim
+    restart: always
+    environment:
+      - MONGO_DATA_DIR=/data/db
+    volumes:
+      - ./data/db:/data/db
+    ports:
+      - 27017:27017
+networks:
+  benimagim:
+    driver: bridge
+    ipam:
+      driver: default
