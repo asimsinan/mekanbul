@@ -21,7 +21,7 @@ const signUp = async function (req, res) {
     });
   } catch (error) {
     createResponse(res, 400, 
-      { status: "Kayıt başarız!" });
+      { status: "Kayıt başarız" });
   }
 };
 const login = async function (req, res) {
