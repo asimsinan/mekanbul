@@ -2,20 +2,20 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
+        stage('Kod alma') {
             steps {
                 git branch: 'main', url: 'https://github.com/asimsinan/mekanbul.git'
             }
         }
 
-        stage('Build and Deploy') {
+        stage('Build ve Deploy') {
             steps {
                 sh 'docker compose down'
                 sh 'docker compose up -d --build'
             }
         }
 
-        stage('Health Check') {
+        stage('Sağlık Kontrolü') {
             steps {
                 script {
                     sleep 10
@@ -27,10 +27,10 @@ pipeline {
 
     post {
         success {
-            echo 'Deploy basarili: mekanbul calisiyor.'
+            echo 'Deploy başarılı: mekanbul çalışıyor.'
         }
         failure {
-            echo 'Deploy basarisiz: loglari kontrol et.'
+            echo 'Deploy başarısız: logları kontrol et.'
         }
     }
 }
