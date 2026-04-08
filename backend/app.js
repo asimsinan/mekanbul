@@ -1,7 +1,7 @@
 require("dotenv").config();
 var express = require("express");
 var path = require("path");
-var cors = require("cors");
+
 var cookieParser = require("cookie-parser");
 const passport = require("passport");
 var logger = require("morgan");
